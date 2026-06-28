@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Catalogue — Chaya Creations</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream:    #f8f5f0;
+      --white:    #ffffff;
+      --charcoal: #1a1a1a;
+      --mid:      #5a5a5a;
+      --light:    #c8c3bc;
+      --sage:     #8aaa8c;
+      --sage-lt:  #eaf1ea;
+      --accent:   #c2a77d;
+      --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --font-serif: Georgia, 'Times New Roman', serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--white);
+      color: var(--charcoal);
+      line-height: 1.6;
+      padding-top: 76px;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /* NAV */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.4rem 4rem;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(200,195,188,0.3);
+    }
+    .nav-logo { display: flex; flex-direction: column; line-height: 1; }
+    .nav-logo .brand-main {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      letter-spacing: 0.06em;
+      color: var(--charcoal);
+    }
+    .nav-logo .brand-sub {
+      font-size: 0.6rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-top: 2px;
+    }
+    .nav-back {
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--mid);
+      border-bottom: 1px solid var(--light);
+      padding-bottom: 2px;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--charcoal); }
+
+    /* PAGE HEADER */
+    .page-header {
+      background: var(--cream);
+      padding: 4rem 4rem 3rem;
+      border-bottom: 1px solid rgba(200,195,188,0.3);
+    }
+    .page-header .label {
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+    .page-header h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 400;
+      color: var(--charcoal);
+      margin-bottom: 0.75rem;
+    }
+    .page-header p {
+      font-size: 0.95rem;
+      color: var(--mid);
+      max-width: 520px;
+    }
+
+    /* FILTERS */
+    .filters {
+      padding: 2rem 4rem;
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      border-bottom: 1px solid rgba(200,195,188,0.2);
+      position: sticky;
+      top: 76px;
+      background: var(--white);
+      z-index: 50;
+    }
+    .filter-btn {
+      padding: 0.5rem 1.25rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border: 1px solid var(--light);
+      background: transparent;
+      color: var(--mid);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font-sans);
+    }
+    .filter-btn:hover { border-color: var(--charcoal); color: var(--charcoal); }
+    .filter-btn.active {
+      background: var(--charcoal);
+      border-color: var(--charcoal);
+      color: var(--white);
+    }
+    .filter-btn.active.sage {
+      background: var(--sage);
+      border-color: var(--sage);
+    }
+
+    /* GRID */
+    .catalogue {
+      padding: 3rem 4rem 6rem;
+    }
+    .category-section { margin-bottom: 4rem; }
+    .category-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .category-count {
+      font-size: 0.65rem;
+      color: var(--light);
+      letter-spacing: 0.1em;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+    .product-card {
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s;
+    }
+    .product-card:hover { transform: translateY(-4px); }
+    .product-img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      background: var(--cream);
+      display: block;
+    }
+    .product-info {
+      padding: 1rem 0 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .product-tag {
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--sage);
+    }
+    .product-name {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--charcoal);
+      line-height: 1.3;
+    }
+    .product-material {
+      font-size: 0.8rem;
+      color: var(--mid);
+    }
+    .product-enquire {
+      margin-top: 0.75rem;
+      display: inline-block;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      border-bottom: 1px solid var(--charcoal);
+      padding-bottom: 2px;
+      align-self: flex-start;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .product-enquire:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* EMPTY STATE */
+    .no-products {
+      text-align: center;
+      padding: 5rem 2rem;
+      color: var(--mid);
+      font-size: 0.9rem;
+    }
+
+    /* FOOTER */
+    .cat-footer {
+      background: var(--charcoal);
+      color: rgba(255,255,255,0.6);
+      padding: 2.5rem 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .cat-footer .brand {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      color: var(--white);
+    }
+    .cat-footer p { font-size: 0.8rem; }
+    .cat-footer a {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .cat-footer a:hover { border-color: var(--accent); }
+
+    @media (max-width: 900px) {
+      header { padding: 1.2rem 1.8rem; }
+      .page-header { padding: 3rem 1.8rem 2rem; }
+      .filters { padding: 1.5rem 1.8rem; top: 68px; }
+      .catalogue { padding: 2rem 1.8rem 4rem; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .cat-footer { padding: 2rem 1.8rem; }
+    }
+    @media (max-width: 480px) {
+      .product-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="nav-logo">
+      <span class="brand-main">Chaya Creations</span>
+      <span class="brand-sub">Est. 2010 · Bengaluru</span>
+    </a>
+    <a href="index.html" class="nav-back">← Back to Home</a>
+  </header>
+
+  <div class="page-header">
+    <span class="label">Chaya Creations</span>
+    <h1>Our Catalogue</h1>
+    <p>Handcrafted ethnic wear for children and premium suit materials for women — made in Bengaluru since 2010.</p>
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active" onclick="filterProducts('all')">All Products</button>
+    <button class="filter-btn sage" onclick="filterProducts('frocks')">Kids' Frocks</button>
+    <button class="filter-btn sage" onclick="filterProducts('sets')">Kids' Sets</button>
+    <button class="filter-btn" onclick="filterProducts('suit')">Suit Materials</button>
+  </div>
+
+  <div class="catalogue">
+
+    <!-- KIDS FROCKS -->
+    <div class="category-section" data-category="frocks">
+      <div class="category-label">
+        <span>Kids' Frocks</span>
+        <span class="category-count">8 pieces</span>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <img class="product-img" src="https://2.wlimg.com/product_images/bc-500/2026/2/14988316/sleeveless-cotton-printed-frock-1771328271-8588346.jpeg" alt="Sleeveless Printed Cotton Frock" loading="lazy"/>
+          <div class="product-info">
+            <span class="product-tag">Kids' Frocks</span>
+            <div class="product-name">Sleeveless Printed Cotton Frock</div>
+            <div class="product-material">100% Cotton · Printed</div>
+            <a href="index.html#contact" class="product-enquire">Enquire →</a>
+          </div>
+        </div>
+        <div class="product-card">
+          <img class="product-img" src="https://2.wlimg.com/product_images/bc-500/2026/2/14988316/girls-kids-yellow-and-red-printed-cotton-frock-1771328068-8588312.jpeg" alt="Yellow & Red Printed Cotton Frock" loading="lazy"/>
+          <div class="product-info">
+            <span class="product-tag">Kids' Frocks</span>
+            <div class="product-name">Yellow & Red Printed Cotton Frock</div>
+            <div class="product-material">100% Cotton · Printed</div>
+            <a href="index.html#contact" class="product-enquire">Enquire →</a>
+          </div>
+        </div>
+        <div class="product-card">
+          <img class="product-img" src="https://2.wlimg.com/product_images/bc-small/2026/2/14988316/black-and-white-soft-cotton-printed-frock-1771328150-8588335.jpeg" alt="Black & White Cotton Printed Frock" loading="lazy"/>
+          <div class="product-info">
+            <span class="product-tag">Kids' Frocks</span>
+            <div class="product-name">Black & White Cotton Printed Frock</div>
+            <div class="product-material">Soft Cotton · Printed</div>
+            <a href="index.html#contact" class="product-enquire">Enquire →</a>
+          </div>
+        </div>
+        <div class="product-card">
+          <img class="product-img" src="https://2.wlimg.com/product_images/bc-small/2026/2/14988316/girl-pink-cotton-printed-frock-1771328076-8588320.jpeg" alt="Pink Cotton Printed Frock" loading="lazy"/>
+          <div class="product-info">
+            <span class="product-tag">Kids' Frocks</span>
+            <div class="product-name">Pink Cotton Printed Frock</div>
+            <div class="product-material">100% Cotton · Printed</div>
+            <a href="index.html#contact" class="product-enquire">Enquire →</a>
+          </div>
+        </div>
+        <div class="product-card">
+          <img class="product-img" src="https://2.wlimg.com/product_images/bc-500/2026/2/14988316/girls-red-printed-cotton-strap-frock-1771329064-8588400.jpeg" alt="Red Cotton Strap Frock" loading="lazy"/>
+          <div class="product-info">
+            <span class="product-tag">Kids' Strap Frocks</span>
+            <div class="product-name">Red Cotton Strap Frock</div>
+            <div class="product-material">100% Cotton · Printed</div>
+            <a href="index.html#contact" class="product-enquire">Enquire →</a>
+          </div>
+        </div>
+        <div class="product-card">
+          <img class="product-img" src="https://2.wlimg.com/product_images/bc-500/2026/2/14988316/yellow-and-black-kids-girls-cotton-strap-frock-1771328865-8588389.jpeg" alt="Yellow & Black Cotton Strap Frock" loading="lazy"/>
+          <div class="product-info">
+            <span class="product-tag">Kids' Strap Frocks</span>
+            <div class="product-name">Yellow & Black Cotton Strap Frock</div>
+            <div class="product-material">100% Cotton · Printed</div>
+            <a href="index.html#contact" class="product-enquire">Enquire →</a>
+          </div>
+        </div>
+        <div class="product-card">
+          <img class="product-img" src="https://2.wlimg.com/product_images/bc-small/2026/2/14988316/handloom-style-cotton-cotton-strap-frock-for-baby-1771328979-8588398.jpeg" alt="Handloom Cotton Strap Frock" loading="lazy"/>
+          <div class="product-info">
+            <span class="product-tag">Kids' Strap Frocks</span>
+            <div class="product-name">Handloom Cotton Strap Frock</div>
+            <div class="product-material">Handloom Cotton</div>
+            <a href="index.html#contact" class="product-enquire">Enquire →</a>
+          </div>
+        </div>
+        <div class="product-card">
+          <img class="product-img" src="https://2.wlimg.com/product_images/bc-small/2026/2/14988316/soft-cotton-kids-strap-frock-1771329129-8588405.jpeg" alt="Soft Cotton Strap Frock" loading="lazy"/>
+          <div class="product-info">
+            <span class="product-tag">Kids' Strap Frocks</span>
+            <div class="product-name">Soft Cotton Strap Frock</div>
+            <div class="product-material">Soft Cotton</div>
+            <a href="index.html#contact" class="product-enquire">Enquire →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KIDS SETS -->
+    <div class="category-section" data-category="sets">
+      <div class="category-label">
+        <span>Kids' Sets</span>
+        <span class="category-count">2 pieces</span>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <img class="product-img" src="https://2.wlimg.com/product_images/bc-500/2026/2/14988316/yellow-printed-handwoven-jamdani-kids-lehenga-choli-1771329414-8588418.jpeg" alt="Jamdani Kids Lehenga Choli" loading="lazy"/>
+          <div class="product-info">
+            <span class="product-tag">Lehenga Choli</span>
+            <div class="product-name">Jamdani Kids Lehenga Choli</div>
+            <div class="product-material">Cotton · Handwoven · Printed</div>
+            <a href="index.html#contact" class="product-enquire">Enquire →</a>
+          </div>
+        </div>
+        <div class="product-card">
+          <img class="product-img" src="https://2.wlimg.com/product_images/bc-500/2026/2/14988316/kids-red-cotton-printed-kurti-pant-set-1771397599-8589277.jpeg" alt="Cotton Printed Kurti Pant Set" loading="lazy"/>
+          <div class="product-info">
+            <span class="product-tag">Kurti Pant Set</span>
+            <div class="product-name">Cotton Printed Kurti Pant Set</div>
+            <div class="product-material">100% Cotton · Printed · Stitched</div>
+            <a href="index.html#contact" class="product-enquire">Enquire →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUIT MATERIALS -->
+    <div class="category-section" data-category="suit">
+      <div class="category-label">
+        <span>Suit Materials</span>
+        <span class="category-count">5 pieces</span>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <img class="product-img" src="https://2.wlimg.com/product_images/bc-500/2026/2/14988316/black-and-yellow-cotton-hand-block-print-1771399014-8589347.jpeg" alt="Black & Yellow Hand Block Print" loading="lazy"/>
+          <div class="product-info">
+            <span class="product-tag">Block Print</span>
+            <div class="product-name">Black & Yellow Hand Block Print</div>
+            <div class="product-material">Cotton · Hand Block Printed</div>
+            <a href="index.html#contact" class="product-enquire">Enquire →</a>
+          </div>
+        </div>
+        <div class="product-card">
+          <img class="product-img" src="https://2.wlimg.com/product_images/bc-500/2026/2/14988316/pink-and-black-cotton-hand-block-print-embroidered-1771398856-8589339.jpeg" alt="Pink & Black Block Print Embroidered" loading="lazy"/>
+          <div class="product-info">
+            <span class="product-tag">Block Print</span>
+            <div class="product-name">Pink & Black Block Print Embroidered</div>
+            <div class="product-material">Cotton · Hand Block Printed · Embroidered</div>
+            <a href="index.html#contact" class="product-enquire">Enquire →</a>
+          </div>
+        </div>
+        <div class="product-card">
+          <img class="product-img" src="https://2.wlimg.com/product_images/bc-500/2026/2/14988316/digital-print-soft-mashru-silk-suit-material-1771398570-8589322.jpeg" alt="Digital Print Mashru Silk Suit" loading="lazy"/>
+          <div class="product-info">
+            <span class="product-tag">Mashru Silk</span>
+            <div class="product-name">Digital Print Mashru Silk Suit</div>
+            <div class="product-material">Mashru Silk · Digital Print</div>
+            <a href="index.html#contact" class="product-enquire">Enquire →</a>
+          </div>
+        </div>
+        <div class="product-card">
+          <img class="product-img" src="https://2.wlimg.com/product_images/bc-500/2026/2/14988316/premium-handcrafted-applique-work-pure-cotton-suit-1771329906-8588433.jpeg" alt="Applique Work Pure Cotton Suit" loading="lazy"/>
+          <div class="product-info">
+            <span class="product-tag">Pure Cotton</span>
+            <div class="product-name">Applique Work Pure Cotton Suit</div>
+            <div class="product-material">Pure Cotton · Applique Work</div>
+            <a href="index.html#contact" class="product-enquire">Enquire →</a>
+          </div>
+        </div>
+        <div class="product-card">
+          <img class="product-img" src="https://2.wlimg.com/product_images/bc-500/2026/2/14988316/handcrafted-red-and-beige-khadi-silk-suit-material-1771397954-8589288.jpeg" alt="Red & Beige Khadi Silk Suit" loading="lazy"/>
+          <div class="product-info">
+            <span class="product-tag">Khadi Silk</span>
+            <div class="product-name">Red & Beige Khadi Silk Suit</div>
+            <div class="product-material">Khadi Silk · Handcrafted</div>
+            <a href="index.html#contact" class="product-enquire">Enquire →</a>
+          </div>
+        </div>
+        <div class="product-card">
+          <img class="product-img" src="https://2.wlimg.com/product_images/bc-500/2026/2/14988316/aqua-green-and-cream-khadi-silk-printed-suit-1771398330-8589307.jpeg" alt="Aqua Green Khadi Silk Suit" loading="lazy"/>
+          <div class="product-info">
+            <span class="product-tag">Khadi Silk</span>
+            <div class="product-name">Aqua Green & Cream Khadi Silk Suit</div>
+            <div class="product-material">Khadi Silk · Printed</div>
+            <a href="index.html#contact" class="product-enquire">Enquire →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="cat-footer">
+    <div>
+      <div class="brand">Chaya Creations</div>
+      <p>Bikasipura, Bengaluru 560111</p>
+    </div>
+    <a href="index.html#contact">Get in touch to place an order →</a>
+  </footer>
+
+  <script>
+    function filterProducts(category) {
+      const sections = document.querySelectorAll('.category-section');
+      const buttons = document.querySelectorAll('.filter-btn');
+
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      sections.forEach(section => {
+        if (category === 'all' || section.dataset.category === category) {
+          section.style.display = 'block';
+        } else {
+          section.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
